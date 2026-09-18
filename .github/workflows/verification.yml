@@ -1,0 +1,70 @@
+name: Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tableau_collaboratif
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d tableau_collaboratif"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/tableau_collaboratif
+      GOOGLE_CLIENT_ID: test.apps.googleusercontent.com
+      NODE_ENV: test
+      PORT: 8000
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v7
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installer les dependances
+        run: npm ci
+
+      - name: Initialiser PostgreSQL
+        run: psql "$DATABASE_URL" -f serveur/initialisation.sql
+
+      - name: Demarrer le serveur
+        run: |
+          npm start > serveur-test.log 2>&1 &
+          for tentative in {1..30}; do
+            if curl --fail --silent http://localhost:8000/api/sante > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat serveur-test.log
+          exit 1
+
+      - name: Executer les tests
+        run: npm test
+
+      - name: Afficher le journal en cas d'echec
+        if: failure()
+        run: cat serveur-test.log

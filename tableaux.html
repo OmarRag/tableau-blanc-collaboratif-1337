@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes tableaux</title>
+    <link rel="stylesheet" href="tableaux.css">
+</head>
+
+<body>
+    <header class="entete-tableaux">
+        <span class="nom-application">Tableau blanc</span>
+        <button id="deconnexion" type="button">Se déconnecter</button>
+    </header>
+
+    <main class="contenu-tableaux">
+        <div class="titre-page">
+            <div>
+                <h1>Mes tableaux</h1>
+                <p>Choisis un tableau ou crée un nouveau tableau.</p>
+            </div>
+
+            <button id="nouveau-tableau" type="button">Nouveau tableau</button>
+        </div>
+
+        <p id="message-tableaux" class="message-tableaux" aria-live="polite"></p>
+        <section id="liste-tableaux" class="liste-tableaux" aria-label="Liste des tableaux"></section>
+    </main>
+
+    <dialog id="fenetre-partage" class="fenetre-partage">
+        <div class="entete-partage">
+            <div>
+                <h2>Partager</h2>
+                <p id="nom-tableau-partage"></p>
+            </div>
+            <button id="fermer-partage" type="button" aria-label="Fermer">×</button>
+        </div>
+
+        <div class="choix-partage">
+            <button id="creer-lien-lecture" type="button">
+                <strong>Lecture</strong>
+                <span>Voir le tableau</span>
+            </button>
+            <button id="creer-lien-modification" type="button">
+                <strong>Modification</strong>
+                <span>Dessiner et modifier</span>
+            </button>
+        </div>
+
+        <div id="lien-genere-conteneur" class="lien-genere-conteneur" hidden>
+            <input id="lien-genere" type="text" readonly>
+            <button id="copier-lien" type="button">Copier</button>
+        </div>
+
+        <p id="message-partage" class="message-partage" aria-live="polite"></p>
+    </dialog>
+
+    <script type="module" src="js/interface/tableaux.js"></script>
+</body>
+
+</html>

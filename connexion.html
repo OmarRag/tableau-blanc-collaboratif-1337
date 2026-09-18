@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Tableau blanc</title>
+    <link rel="stylesheet" href="connexion.css">
+</head>
+
+<body>
+    <main class="carte-connexion">
+        <h1>Tableau blanc</h1>
+        <p class="sous-titre">Organise et dessine tes idées.</p>
+
+        <h2>Connexion</h2>
+        <p class="explication-connexion">
+            Utilise ton compte Google pour accéder à tes tableaux.
+        </p>
+
+        <div id="bouton-google" class="bouton-google"></div>
+
+        <p id="message-connexion" class="message-connexion" aria-live="polite"></p>
+    </main>
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script type="module" src="js/interface/connexion.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+node_modules/
+rapprt/build/
+.env
+
+# Fichiers personnels conserves uniquement sur cet ordinateur
+/rapprt/
+/aFaire.text
+/competences.md
+/fonctionnement.md
+/Logo_1337.png
+/logo_ensa.png
+/logo_uh1.png
+/diag_cas_util_stage_1337.png
+/diag_classe_stage_1337.png
+/Diagramme de séquence - Collaboration en temps réel.png
+/Diagramme de séquence - Création d'une forme.png
+/Diagramme de séquence - Modification d'une forme.png
+/Diagramme de séquence - Ouverture d'un tableau partagé.png

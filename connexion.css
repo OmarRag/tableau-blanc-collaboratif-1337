@@ -1,0 +1,65 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f3f4f6;
+    font-family: Arial, sans-serif;
+}
+
+.carte-connexion {
+    width: 100%;
+    max-width: 380px;
+    padding: 30px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.carte-connexion h1 {
+    color: #222222;
+    font-size: 26px;
+    text-align: center;
+}
+
+.sous-titre {
+    margin-top: 7px;
+    color: #777777;
+    font-size: 14px;
+    text-align: center;
+}
+
+.carte-connexion h2 {
+    margin-top: 28px;
+    color: #333333;
+    font-size: 19px;
+}
+
+.explication-connexion {
+    margin-top: 8px;
+    color: #666666;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.bouton-google {
+    min-height: 44px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.message-connexion {
+    min-height: 18px;
+    margin-top: 12px;
+    color: #555555;
+    font-size: 12px;
+    text-align: center;
+}

@@ -1,0 +1,31 @@
+{
+  "name": "tableau-blanc-collaboratif",
+  "version": "1.0.0",
+  "description": "Tableau blanc collaboratif en temps reel avec Canvas, WebSocket et PostgreSQL.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmarRag/tableau-blanc-collaboratif-1337.git"
+  },
+  "homepage": "https://tableau-collaboratif-1337.onrender.com",
+  "scripts": {
+    "start": "node serveur.js",
+    "test": "npm run test:base-de-donnees && npm run test:authentification && npm run test:api && npm run test:temps-reel",
+    "test:temps-reel": "node tests/tempsReel.test.js",
+    "test:base-de-donnees": "node tests/baseDeDonnees.test.js",
+    "test:api": "node tests/apiTableaux.test.js",
+    "test:authentification": "node tests/authentification.test.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "google-auth-library": "^11.1.0",
+    "pg": "^8.23.0",
+    "ws": "^8.21.3"
+  }
+}

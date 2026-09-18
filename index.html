@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mon tableau</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Sans tableau choisi, commencer par la page de connexion
+    let parametres = new URLSearchParams(window.location.search);
+
+    if (!parametres.has("tableau")) {
+      window.location.replace("connexion.html");
+    }
+  </script>
+</head>
+
+<body>
+  <!-- Navigation du tableau ouvert -->
+  <nav id="navigation-tableau" aria-label="Navigation du tableau">
+    <a href="tableaux.html">Mes tableaux</a>
+    <button id="deconnexion-tableau" type="button">Se déconnecter</button>
+  </nav>
+
+  <!-- Nom du tableau ouvert -->
+  <div id="nom-tableau-ouvert"></div>
+  <div id="mode-lecture" hidden>Lecture seule</div>
+
+  <!-- Barre d'outils principale -->
+  <div id="barre-outils">
+    <!-- Outils de dessin -->
+    <div class="titre-outils">Formes</div>
+
+    <button id="crayon" title="Crayon" aria-label="Crayon">✎</button>
+    <button id="rectangle" title="Rectangle" aria-label="Rectangle">▭</button>
+    <button id="cercle" title="Cercle" aria-label="Cercle">◯</button>
+    <button id="ellipse" title="Ellipse" aria-label="Ellipse"><span style="font-size: 32px;">⬭</span></button>
+    <button id="fleche" title="Flèche" aria-label="Flèche">➜</button>
+    <button id="texte" title="Texte" aria-label="Texte">T</button>
+
+    <button id="ligne" title="Ligne" aria-label="Ligne">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+        <line x1="4" y1="24" x2="24" y2="4" stroke="black" stroke-width="2" />
+      </svg>
+    </button>
+
+    <div class="separateur-outils"></div>
+    <div class="titre-outils">Épaisseur</div>
+
+    <!-- Reglage de l'epaisseur -->
+    <div class="reglage-avec-boutons">
+      <button id="diminuerEpaisseur" title="Diminuer l'epaisseur" aria-label="Diminuer l'epaisseur">-</button>
+      <input type="range" id="epaisseur" min="1" max="6" step="1" value="2">
+      <button id="augmenterEpaisseur" title="Augmenter l'epaisseur" aria-label="Augmenter l'epaisseur">+</button>
+    </div>
+
+    <div class="separateur-outils"></div>
+
+    <!-- Reglage du zoom -->
+    <div class="titre-outils">Zoom</div>
+    <div class="reglage-avec-boutons">
+      <button id="diminuerZoom" title="Diminuer le zoom" aria-label="Diminuer le zoom">-</button>
+      <input type="range" id="zoom" min="50" max="300" step="10" value="100">
+      <button id="augmenterZoom" title="Augmenter le zoom" aria-label="Augmenter le zoom">+</button>
+    </div>
+
+    <div class="separateur-outils"></div>
+
+    <!-- Outil de remplissage -->
+    <div class="titre-outils">Remplissage</div>
+    <button id="remplir" title="Remplir une zone" aria-label="Remplir une zone">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5.5 10.5 11 5l7 7-5.5 5.5a2 2 0 0 1-2.8 0l-4.2-4.2a2 2 0 0 1 0-2.8Z"
+          stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+        <path d="m7 3 9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        <path d="M20 15.5s2 2.4 2 3.7a2 2 0 0 1-4 0c0-1.3 2-3.7 2-3.7Z"
+          fill="#4f7ee8" stroke="#2d6cdf" stroke-width="1.2" />
+      </svg>
+    </button>
+
+    <div class="separateur-outils"></div>
+
+    <!-- Actions sur le canvas -->
+    <div class="titre-outils">Actions</div>
+
+    <button id="deplacerCanvas" title="Déplacer le canvas" aria-label="Déplacer le canvas">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 13V8a1.5 1.5 0 0 1 3 0v3-6a1.5 1.5 0 0 1 3 0v6-5a1.5 1.5 0 0 1 3 0v5-3a1.5 1.5 0 0 1 3 0v6.5A6.5 6.5 0 0 1 11.5 21h-1.1a6 6 0 0 1-4.8-2.4l-3-4a1.7 1.7 0 0 1 2.6-2.2L6 13Z"
+          stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <button id="selection" title="Sélection et déplacement" aria-label="Sélection et déplacement">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+        <line x1="4" y1="14" x2="24" y2="14" stroke="black" stroke-width="2" />
+        <line x1="14" y1="4" x2="14" y2="24" stroke="black" stroke-width="2" />
+        <polygon points="2,14 8,10 8,18" fill="black" />
+        <polygon points="26,14 20,10 20,18" fill="black" />
+        <polygon points="14,2 10,8 18,8" fill="black" />
+        <polygon points="14,26 10,20 18,20" fill="black" />
+      </svg>
+    </button>
+    <button id="supprimer" title="Supprimer une forme" aria-label="Supprimer une forme">⌫</button>
+    <button id="gomme" title="Gomme" aria-label="Gomme">◌</button>
+
+    <div class="separateur-outils"></div>
+
+    <!-- Choix des couleurs -->
+    <div class="titre-outils">Couleur</div>
+    <div id="palette-couleurs">
+      <button class="couleur" data-couleur="#000000" style="background-color: #000000;"></button>
+      <button class="couleur" data-couleur="#ffffff" style="background-color: #ffffff;"></button>
+      <button class="couleur" data-couleur="#ff0000" style="background-color: #ff0000;"></button>
+      <button class="couleur" data-couleur="#0000ff" style="background-color: #0000ff;"></button>
+      <button class="couleur" data-couleur="#00aa00" style="background-color: #00aa00;"></button>
+      <button class="couleur" data-couleur="#ffff00" style="background-color: #ffff00;"></button>
+      <button class="couleur" data-couleur="#ff8800" style="background-color: #ff8800;"></button>
+      <button class="couleur" data-couleur="#800080" style="background-color: #800080;"></button>
+    </div>
+    <input type="color" id="couleur" value="#000000">
+  </div>
+
+  <!-- Export en bas au centre -->
+  <div id="export-outil">
+    <button id="importerJSON" title="Importer un fichier JSON" aria-label="Importer un fichier JSON">
+      <span class="texte-bouton-principal">Importer</span>
+      <span class="texte-bouton-secondaire">JSON</span>
+    </button>
+    <div id="menu-export-conteneur">
+      <button id="ouvrirMenuExport" title="Afficher les options d'export" aria-label="Afficher les options d'export">
+        Exporter <span class="fleche-menu">▲</span>
+      </button>
+      <div id="menu-export">
+        <button id="exporterPNG" title="Exporter en PNG" aria-label="Exporter en PNG">PNG</button>
+        <button id="exporterJSON" title="Exporter en JSON" aria-label="Exporter en JSON">JSON</button>
+      </div>
+    </div>
+    <input type="file" id="fichierJSON" accept=".json,application/json" hidden>
+  </div>
+
+  <!-- Annuler ou refaire une action locale -->
+  <div id="historique-outil">
+    <button id="annuler" title="Annuler la dernière action" aria-label="Annuler la dernière action">↶</button>
+    <button id="refaire" title="Refaire la dernière action annulée" aria-label="Refaire la dernière action annulée">↷</button>
+  </div>
+
+  <!-- Surface de dessin -->
+  <canvas id="tableau"></canvas>
+
+  <!-- Curseurs temporaires des autres utilisateurs -->
+  <div id="curseurs-distants" aria-hidden="true"></div>
+
+  <!-- Chargement du programme principal -->
+  <script type="module" src="js/dessin.js"></script>
+  <script type="module" src="js/interface/nomTableau.js"></script>
+</body>
+
+</html>

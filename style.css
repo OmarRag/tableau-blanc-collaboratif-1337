@@ -1,0 +1,374 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* Regles generales de la page */
+body {
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* Boutons de navigation du tableau */
+#navigation-tableau {
+    position: fixed;
+    top: 12px;
+    left: 132px;
+    z-index: 10;
+    display: flex;
+    gap: 6px;
+}
+
+#navigation-tableau a,
+#navigation-tableau button {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: white;
+    color: #333333;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#navigation-tableau a:hover,
+#navigation-tableau button:hover {
+    background-color: #e5e5e5;
+}
+
+/* Nom du tableau ouvert */
+#nom-tableau-ouvert {
+    position: fixed;
+    top: 52px;
+    left: 132px;
+    z-index: 9;
+    color: #666666;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+#mode-lecture {
+    position: fixed;
+    top: 52px;
+    left: 260px;
+    z-index: 9;
+    padding: 3px 7px;
+    border-radius: 10px;
+    background-color: #fff0c7;
+    color: #805f00;
+    font-size: 11px;
+    pointer-events: none;
+}
+
+/* Surface de dessin */
+#tableau {
+    display: block;
+    margin-left: 120px;
+    background-color: #f5f5f5;
+}
+
+/* Curseurs des autres utilisateurs */
+#curseurs-distants {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 120px;
+    z-index: 8;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.curseur-distant {
+    --couleur-utilisateur: #2d6cdf;
+    position: absolute;
+    width: 18px;
+    height: 23px;
+}
+
+.pointe-curseur-distant {
+    display: block;
+    width: 18px;
+    height: 23px;
+    background-color: var(--couleur-utilisateur);
+    clip-path: polygon(0 0, 100% 66%, 58% 70%, 76% 100%, 58% 100%, 41% 73%, 0 100%);
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+}
+
+.nom-curseur-distant {
+    position: absolute;
+    top: 19px;
+    left: 14px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background-color: var(--couleur-utilisateur);
+    color: white;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Barre d'outils */
+#barre-outils {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 100vh;
+    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 6px 1mm;
+    border: 1px solid #cccccc;
+    border-radius: 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Boutons de la barre d'outils */
+#barre-outils button {
+    width: 42px;
+    height: 36px;
+    padding: 4px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#barre-outils button:hover {
+    background-color: #e5e5e5;
+}
+
+#barre-outils button.outil-selectionne {
+    background-color: #c9dcff;
+    border: 2px solid #2d6cdf;
+}
+
+/* Decaler uniquement les boutons des formes vers la droite */
+#crayon,
+#rectangle,
+#cercle,
+#ellipse,
+#fleche,
+#texte,
+#ligne {
+    transform: translateX(2mm);
+}
+
+/* Decaler uniquement les boutons des actions vers la droite */
+#deplacerCanvas,
+#selection,
+#supprimer,
+#gomme {
+    transform: translateX(2mm);
+}
+
+/* Centrer le bouton de remplissage */
+#remplir {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Titres et separateur des groupes */
+.separateur-outils {
+    width: 100%;
+    height: 1px;
+    margin: 3px 0;
+    background-color: #cccccc;
+}
+
+.titre-outils {
+    width: 100%;
+    margin: 1px 0;
+    color: #555555;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Boutons annuler et refaire */
+#historique-outil {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 6px;
+}
+
+/* Bouton d'export en bas au centre */
+#export-outil {
+    position: fixed;
+    bottom: calc(24px - 4mm);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+#ouvrirMenuExport,
+#importerJSON {
+    width: 86px;
+    height: 34px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#ouvrirMenuExport:hover,
+#importerJSON:hover {
+    background-color: #e5e5e5;
+}
+
+#menu-export-conteneur {
+    position: relative;
+}
+
+#menu-export {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+    bottom: 40px;
+    left: 50%;
+    padding: 4px;
+    transform: translateX(-50%);
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#menu-export.menu-ouvert {
+    display: flex;
+}
+
+#menu-export button {
+    width: 58px;
+    height: 28px;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#menu-export button:hover {
+    background-color: #e5e5e5;
+}
+
+.fleche-menu {
+    color: #666666;
+    font-size: 10px;
+}
+
+.texte-bouton-principal {
+    font-size: 13px;
+}
+
+.texte-bouton-secondaire {
+    margin-left: 3px;
+    color: #888888;
+    font-size: 10px;
+}
+
+#annuler,
+#refaire {
+    width: 40px;
+    height: 34px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#annuler:disabled,
+#refaire:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Outil selection */
+#selection {
+    background-color: #eeeeee;
+}
+
+/* Elements de choix de couleur */
+#barre-outils label {
+    width: 100%;
+    margin-top: 8px;
+    text-align: center;
+}
+
+#couleur {
+    margin: 0 auto;
+    width: 32px;
+    height: 28px;
+    padding: 2px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+#palette-couleurs {
+    display: grid;
+    grid-template-columns: repeat(4, 18px);
+    gap: 2px;
+    width: 100%;
+    justify-content: center;
+}
+
+#epaisseur,
+#zoom {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.reglage-avec-boutons {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+.reglage-avec-boutons button {
+    flex: 0 0 20px;
+    width: 20px !important;
+    height: 22px !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+}
+
+#palette-couleurs .couleur {
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    border: 1px solid #777777;
+    border-radius: 2px;
+}

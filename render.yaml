@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: tableau-collaboratif-1337
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/sante
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        value: 863929630980-3bl4cpbkooiqrrs0ggrg3nq97v6qa69j.apps.googleusercontent.com
