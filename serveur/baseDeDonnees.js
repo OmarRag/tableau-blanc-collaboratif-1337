@@ -93,6 +93,26 @@ export async function creerTableau(tableau, proprietaireId) {
     return resultat.rows[0];
 }
 
+// Verifier qu'un proprietaire ne possede pas deja un tableau du meme nom.
+export async function nomTableauExiste(
+    nom,
+    proprietaireId,
+    identifiantIgnore = null
+) {
+    let resultat = await connexions.query(
+        `SELECT EXISTS (
+             SELECT 1
+             FROM tableaux
+             WHERE proprietaire_id = $1
+               AND LOWER(BTRIM(nom)) = LOWER(BTRIM($2))
+               AND ($3::text IS NULL OR id <> $3)
+         ) AS existe`,
+        [proprietaireId, nom, identifiantIgnore]
+    );
+
+    return resultat.rows[0].existe;
+}
+
 export async function listerTableaux(utilisateur) {
     let resultat = await connexions.query(
         `SELECT tableaux.id,
@@ -109,7 +129,7 @@ export async function listerTableaux(utilisateur) {
              LIMIT 1
          ) AS lien_actif ON TRUE
          WHERE tableaux.proprietaire_id = $1
-         ORDER BY tableaux.modifie_le DESC`,
+         ORDER BY tableaux.cree_le ASC, tableaux.id ASC`,
         [utilisateur.id]
     );
 

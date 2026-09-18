@@ -8,6 +8,7 @@ const adresseSite = (process.env.TEST_BASE_URL || "http://localhost:8000")
     .replace(/\/$/, "");
 const adresseApi = adresseSite + "/api/tableaux";
 const identifiantTest = "test-api-" + Date.now();
+const deuxiemeIdentifiantTest = identifiantTest + "-second";
 const authentification = await creerAuthentificationTest("api");
 const autreAuthentification = await creerAuthentificationTest("api-autre");
 
@@ -49,6 +50,30 @@ try {
 
     assert.equal(creation.statut, 201);
     assert.equal(creation.contenu.id, identifiantTest);
+
+    let nomDuplique = await envoyerRequete(adresseApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            id: identifiantTest + "-doublon-nom",
+            nom: "tableau api",
+            formes: []
+        })
+    });
+
+    assert.equal(nomDuplique.statut, 409);
+
+    let deuxiemeCreation = await envoyerRequete(adresseApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            id: deuxiemeIdentifiantTest,
+            nom: "Deuxieme tableau API",
+            formes: []
+        })
+    });
+
+    assert.equal(deuxiemeCreation.statut, 201);
 
     let accesPriveRefuse = await envoyerRequete(
         adresseApi + "/" + encodeURIComponent(identifiantTest),
@@ -135,6 +160,27 @@ try {
     assert.ok(liste.contenu.some(function (tableau) {
         return tableau.id === identifiantTest;
     }));
+    assert.ok(
+        liste.contenu.findIndex(function (tableau) {
+            return tableau.id === identifiantTest;
+        }) < liste.contenu.findIndex(function (tableau) {
+            return tableau.id === deuxiemeIdentifiantTest;
+        })
+    );
+
+    let renommageDuplique = await envoyerRequete(
+        adresseApi + "/" + encodeURIComponent(deuxiemeIdentifiantTest),
+        {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nom: "TABLEAU API",
+                formes: []
+            })
+        }
+    );
+
+    assert.equal(renommageDuplique.statut, 409);
 
     let chargement = await envoyerRequete(
         adresseApi + "/" + encodeURIComponent(identifiantTest)
@@ -183,6 +229,10 @@ try {
 finally {
     await envoyerRequete(
         adresseApi + "/" + encodeURIComponent(identifiantTest),
+        { method: "DELETE" }
+    );
+    await envoyerRequete(
+        adresseApi + "/" + encodeURIComponent(deuxiemeIdentifiantTest),
         { method: "DELETE" }
     );
     await nettoyerAuthentificationTest(

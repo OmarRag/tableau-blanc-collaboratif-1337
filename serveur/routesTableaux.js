@@ -2,6 +2,7 @@
 import express from "express";
 import {
     creerTableau,
+    nomTableauExiste,
     listerTableaux,
     chargerTableau,
     chargerAccesTableau,
@@ -54,6 +55,18 @@ routesTableaux.post("/", async function (requete, reponse) {
     }
 
     try {
+        let nomExiste = await nomTableauExiste(
+            requete.body.nom,
+            requete.utilisateur.id
+        );
+
+        if (nomExiste) {
+            reponse.status(409).json({
+                erreur: "Un tableau avec ce nom existe deja."
+            });
+            return;
+        }
+
         let tableau = await creerTableau(
             {
                 id: requete.body.id.trim(),
@@ -220,6 +233,19 @@ routesTableaux.put("/:id", async function (requete, reponse) {
     }
 
     try {
+        let nomExiste = await nomTableauExiste(
+            requete.body.nom,
+            requete.utilisateur.id,
+            requete.params.id
+        );
+
+        if (nomExiste) {
+            reponse.status(409).json({
+                erreur: "Un tableau avec ce nom existe deja."
+            });
+            return;
+        }
+
         let tableau = await modifierTableau(requete.params.id, {
             nom: requete.body.nom.trim(),
             formes: requete.body.formes

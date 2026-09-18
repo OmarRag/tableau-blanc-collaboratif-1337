@@ -32,6 +32,16 @@ const cleMigration = "tableauxTransferesVersServeur";
 let tableaux = [];
 let tableauPartageActuel = null;
 
+// Comparer les noms sans tenir compte des majuscules ou des espaces externes.
+function nomTableauDejaUtilise(nom, identifiantIgnore = "") {
+    let nomCompare = nom.trim().toLocaleLowerCase("fr-FR");
+
+    return tableaux.some(function (tableau) {
+        return tableau.id !== identifiantIgnore
+            && tableau.nom.trim().toLocaleLowerCase("fr-FR") === nomCompare;
+    });
+}
+
 // Lire les anciens tableaux avant leur transfert vers PostgreSQL
 function lireTableauxLocaux() {
     let listeSauvegardee = localStorage.getItem(cleListeLocale);
@@ -235,6 +245,11 @@ function afficherTableaux() {
                 return;
             }
 
+            if (nomTableauDejaUtilise(nouveauNom, tableau.id)) {
+                messageTableaux.textContent = "Ce nom est déjà utilisé.";
+                return;
+            }
+
             boutonRenommer.disabled = true;
 
             try {
@@ -302,6 +317,11 @@ boutonNouveauTableau.addEventListener("click", async function () {
         return;
     }
 
+    if (nomTableauDejaUtilise(nom)) {
+        messageTableaux.textContent = "Ce nom est déjà utilisé.";
+        return;
+    }
+
     boutonNouveauTableau.disabled = true;
 
     try {
@@ -311,7 +331,7 @@ boutonNouveauTableau.addEventListener("click", async function () {
             []
         );
 
-        tableaux.unshift(nouveauTableau);
+        tableaux.push(nouveauTableau);
         messageTableaux.textContent = "Le tableau a été créé.";
         afficherTableaux();
     }
